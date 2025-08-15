@@ -1,0 +1,46 @@
+# Base image: Ubuntu
+FROM ubuntu:22.04
+
+# Set non-interactive mode for package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update and install prerequisites
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    git
+
+# Install Node.js (via NodeSource)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g npm@latest \
+    npm install -g nodemon
+
+# Install Go (via wget)
+ENV GO_VERSION=1.23.4
+RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
+    tar -xzf go${GO_VERSION}.linux-amd64.tar.gz -C /usr/local && \
+    rm go${GO_VERSION}.linux-amd64.tar.gz
+
+# Add Go to PATH
+ENV PATH=$PATH:/usr/local/go/bin
+
+# Verify installations
+RUN node -v && npm -v && go version
+
+# Set working directory
+WORKDIR /app
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+# Copy application code into the container
+COPY . .
+
+# Expose ports (if needed, e.g., 3000 for Node.js)
+EXPOSE 3000
+
+# Command to run your application (example)
+# Replace this with your actual application start command
+CMD ["nodemon", "--watch", ".", "--ext", "go", "--exec", "go", "run", ".", "--signal", "SIGTERM"]

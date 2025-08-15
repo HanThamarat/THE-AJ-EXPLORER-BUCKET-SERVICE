@@ -1,0 +1,78 @@
+basePath: /api
+definitions:
+  core.Auth:
+    description: Auth information Contains username and password
+    properties:
+      email:
+        description: |-
+          User's unique username
+          @example administrator
+        type: string
+      password:
+        description: |-
+          User's password
+          @example 123456
+        type: string
+    type: object
+  response.Response:
+    properties:
+      body: {}
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: technexify@outlook.com
+    name: Developer Team
+    url: https://technexify.site
+  description: Authentication | Doc by Swagger.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Authentication
+  version: "1.0"
+paths:
+  /auth:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user with the provided credentials
+      parameters:
+      - description: Authentication credentials
+        in: body
+        name: auth
+        required: true
+        schema:
+          $ref: '#/definitions/core.Auth'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Authenticated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/core.Auth'
+              type: object
+        "401":
+          description: Invalid credentials
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Authenticate a user
+      tags:
+      - Auth
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: Use "Bearer <API_KEY>"
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -1,0 +1,50 @@
+# Stage 1: Build
+FROM golang:1.24.2  as builder
+
+WORKDIR /app
+
+# Copy go mod and download dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy the rest of the source code
+COPY . .
+
+# Set environment variables if needed during build
+ARG CGO_ENABLED=0
+ARG GOOS=linux
+ARG GOARCH=amd64
+
+# Build the Go binary
+RUN go build -o main .
+
+# Stage 2: Production image
+FROM ubuntu:22.04
+
+# Environment vars (injected at runtime or via Docker run/env/k8s)
+ENV PORT=8080
+ENV DB_HOST=localhost
+ENV DB_PORT=5432
+ENV DB_USER=admin
+ENV DB_PASSWORD=secret
+ENV DB_NAME=appdb
+ENV JWT_SECRET=myjwtsecret
+
+# Install any runtime dependencies your app needs (if any)
+RUN apt-get update && apt-get install -y \
+    ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy built binary from builder stage
+COPY --from=builder /app/main .
+
+ COPY config.yaml ./config.yaml
+
+# Expose app port
+EXPOSE 8080
+
+# Run the Go app
+CMD ["./main"]

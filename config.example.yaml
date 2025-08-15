@@ -1,0 +1,19 @@
+DB:
+  url: "mongodb://root:root@localhost:27017"
+  dbname: "TripWithMe"
+  collection: "users"
+
+Server:
+  Port: 3000
+
+App:
+  name: "TripWithMe-Authenticate-Service"
+
+SWAGGER:
+  HOST: http://localhost:3000
+
+JWT:
+  Secret: secret
+  Expired: 1h
+  RefreshSecret: refreshSecret
+  RefreshExpired: 168h

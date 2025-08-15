@@ -1,0 +1,152 @@
+basePath: /api
+definitions:
+  core.FIleDTO:
+    properties:
+      file_name:
+        type: string
+      file_path:
+        type: string
+    type: object
+  core.FIleDTOGet:
+    properties:
+      file_name:
+        items:
+          type: string
+        type: array
+      file_path:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      body: {}
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:3004
+info:
+  contact:
+    email: technexify@outlook.com
+    name: Developer Team
+    url: https://technexify.site
+  description: BUCKET | Doc by Swagger.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: THE AJ EXPLORER BUCKET
+  version: "1.0"
+paths:
+  /deletefiles:
+    post:
+      consumes:
+      - application/json
+      description: Deleting file in bucket.
+      parameters:
+      - description: file body
+        in: body
+        name: filebody
+        required: true
+        schema:
+          $ref: '#/definitions/core.FIleDTOGet'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: File uploaded successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/core.FIleDTOGet'
+              type: object
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Deleting files
+      tags:
+      - File
+  /findfiles:
+    post:
+      consumes:
+      - application/json
+      description: Getting file from bucket.
+      parameters:
+      - description: file body
+        in: body
+        name: filebody
+        required: true
+        schema:
+          $ref: '#/definitions/core.FIleDTOGet'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: File uploaded successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/core.FIleDTOGet'
+              type: object
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Getting files
+      tags:
+      - File
+  /upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a file and receive its metadata
+      parameters:
+      - description: File to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: path to save the files ex. /Han/png
+        in: formData
+        name: file_path
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: File uploaded successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/core.FIleDTO'
+              type: object
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Upload a file
+      tags:
+      - File
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: Use "Bearer <API_KEY>"
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

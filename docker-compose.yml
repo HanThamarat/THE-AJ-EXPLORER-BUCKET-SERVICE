@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:    
+  server:
+    restart: always
+    platform: linux/x86_64
+    build:
+      context: ./
+      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+    command: nodemon --watch . --ext go --exec go run . --signal SIGTERM 
+    ports:
+      - 3004:3000
+    volumes:
+      - ./:/app
+    networks:
+      - backend
+      
+networks:
+  backend:
+    driver: bridge
