@@ -13,8 +13,8 @@ services:
     volumes:
       - ./:/app
     networks:
-      - backend
+      - server
       
 networks:
-  backend:
+  server:
     driver: bridge
