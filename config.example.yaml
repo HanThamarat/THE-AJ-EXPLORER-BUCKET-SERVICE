@@ -4,16 +4,16 @@ DB:
   collection: "users"
 
 Server:
-  Port: 3000
+  Port: 3004
 
 App:
   name: "TripWithMe-Authenticate-Service"
 
 SWAGGER:
-  HOST: http://localhost:3000
+  HOST: ${SWAGGER_HOST}
 
 JWT:
-  Secret: secret
+  Secret: ${JWT_SECRET}
   Expired: 1h
   RefreshSecret: refreshSecret
   RefreshExpired: 168h

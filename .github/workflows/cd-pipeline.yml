@@ -1,0 +1,56 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Set IMAGE_NAME variable
+        run: |
+          echo "IMAGE_NAME_THE_AJ_BUCKET=hanthamarats/the-aj-explorer-bucket:latest" >> $GITHUB_ENV
+
+      - name: Debug IMAGE_NAME variable
+        run: echo "IMAGE_NAME_THE_AJ_BUCKET is $IMAGE_NAME_THE_AJ_BUCKET"
+
+      - name: Delete old container if exists
+        run: sudo docker rm -f the-aj-explorer-bucket || true
+
+      - name: Delete old image if exists
+        run: |
+          IMAGE_ID=$(sudo docker images -q hanthamarats/the-aj-explorer-bucket:latest)
+          if [ -n "$IMAGE_ID" ]; then
+            sudo docker rmi -f $IMAGE_ID || true
+          else
+            echo "No old image found."
+          fi
+
+      - name: Pull latest image
+        run: sudo docker pull $IMAGE_NAME_THE_AJ_BUCKET
+
+      - name: Ensure Docker network exists
+        run: sudo docker network create aj-network || echo "Network already exists ✅"
+
+      - name: Run new container
+        env:
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          SWAGGER_HOST: ${{ secrets.SWAGGER_HOST }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: |
+          echo "Starting new container..."
+          sudo docker run -d \
+            --name the-aj-explorer-bucket \
+            -p $SERVER_PORT:$SERVER_PORT \
+            --network aj-network \
+            -v /home/ubuntu/the-aj-uploads:/app/uploads \
+            -e JWT_SECRET=$JWT_SECRET \
+            -e SWAGGER_HOST=$SWAGGER_HOST \
+            $IMAGE_NAME_THE_AJ_BUCKET
+
+      - name: Confirm container is running
+        run: sudo docker ps | grep the-aj-explorer-bucket
