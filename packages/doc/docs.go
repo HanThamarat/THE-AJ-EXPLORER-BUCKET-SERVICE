@@ -252,7 +252,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3004",
+	Host:             "bucket-app.theajexploer.com",
 	BasePath:         "/api",
 	Schemes:          []string{"http", "https"},
 	Title:            "THE AJ EXPLORER BUCKET",
