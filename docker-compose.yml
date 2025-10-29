@@ -9,7 +9,7 @@ services:
       dockerfile: ${DOCKERFILE:-Dockerfile.dev}
     command: nodemon --watch . --ext go --exec go run . --signal SIGTERM 
     ports:
-      - 3004:3000
+      - 3004:3004
     volumes:
       - ./:/app
     networks:

@@ -14,7 +14,7 @@ import (
 // @contact.email technexify@outlook.com
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host bucket-app.theajexploer.com
+// @host bucket-app.theajexplorer.com
 // @BasePath /api
 // @schemes http https
 // @securityDefinitions.apikey BearerAuth

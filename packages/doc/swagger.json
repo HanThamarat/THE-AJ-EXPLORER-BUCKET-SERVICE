@@ -18,7 +18,7 @@
         },
         "version": "1.0"
     },
-    "host": "bucket-app.theajexploer.com",
+    "host": "bucket-app.theajexplorer.com",
     "basePath": "/api",
     "paths": {
         "/deletefiles": {
