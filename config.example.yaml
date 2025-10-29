@@ -7,7 +7,7 @@ Server:
   Port: 3004
 
 App:
-  name: "TripWithMe-Authenticate-Service"
+  name: "THEAJEXPLORER-BUCKET-Service"
 
 SWAGGER:
   HOST: ${SWAGGER_HOST}
