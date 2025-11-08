@@ -8,6 +8,7 @@ import (
 	"mime/multipart"
 	"os"
 	"path/filepath"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -78,14 +79,16 @@ func (r *fileSystemRepo) FindFiles(FileGet core.FIleDTOGet) ([]core.FindFileResp
 		if err != nil {
 			return []core.FindFileResponse{}, fmt.Errorf("error reading file %s: %w", value, err)
 		}
+		mimeType := http.DetectContentType(fileContent)
 
 		// Encode base64
 		encodedString := base64.StdEncoding.EncodeToString(fileContent)
+		dataURI := fmt.Sprintf("data:%s;base64,%s", mimeType, encodedString)
 
 		response := core.FindFileResponse{
 			FileName:        	value,
 			FileOriginalName: 	value,
-			FileBase94:      	encodedString,
+			FileBase94:      	dataURI,
 			FilePath:        	file.FilePath,
 		}
 		responses = append(responses, response);
