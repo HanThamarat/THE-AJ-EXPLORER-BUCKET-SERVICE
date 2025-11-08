@@ -24,7 +24,7 @@ definitions:
       status:
         type: integer
     type: object
-host: bucket-app.theajexplorer.com
+host: localhost:3004
 info:
   contact:
     email: technexify@outlook.com
