@@ -28,8 +28,8 @@ type (
 
 func NewFiberServer(conf *conf.Config) Server {
 	fiberApp := fiber.New(fiber.Config{
-		ReadBufferSize: 10000 * 1024 * 1024,
-		BodyLimit: 10000 * 1024 * 1024,
+		ReadBufferSize: 500 * 1024 * 1024,
+		BodyLimit: 500 * 1024 * 1024,
 		DisableStartupMessage: false,
 		AppName: conf.App.NAME,
 	});
