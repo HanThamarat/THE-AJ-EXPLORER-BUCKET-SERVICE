@@ -14,7 +14,10 @@ services:
       - ./:/app
     networks:
       - server
+      - shared-net
       
 networks:
   server:
     driver: bridge
+  shared-net:
+    external: true
